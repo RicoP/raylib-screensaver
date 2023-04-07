@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ScreenSaver.cpp">
+    <ClCompile Include="../source/entry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -25,7 +25,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MinimalClock.rc">
+    <ResourceCompile Include="RaylibScreensaver.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <None Include="GeosansLight.ttf">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="MinimalClock.def">
+    <None Include="RaylibScreensaver.def">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

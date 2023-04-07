@@ -14,7 +14,7 @@
     <ProjectGuid>{C481EE9C-7811-4FB3-B3A4-59FF9BC93D5B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ScreenSaver</RootNamespace>
-    <ProjectName>MinimalClock</ProjectName>
+    <ProjectName>RaylibScreensaver</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -44,12 +44,14 @@
     <LinkIncremental>true</LinkIncremental>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <TargetExt>.scr</TargetExt>
+    <IncludePath>.;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <TargetExt>.scr</TargetExt>
+    <IncludePath>.;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -63,7 +65,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>gdiplus.lib;scrnsavw.lib;ComCtl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>MinimalClock.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>RaylibScreensaver.def</ModuleDefinitionFile>
       <EnableUAC>false</EnableUAC>
     </Link>
   </ItemDefinitionGroup>
@@ -85,23 +87,23 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>gdiplus.lib;scrnsavw.lib;ComCtl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>MinimalClock.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>RaylibScreensaver.def</ModuleDefinitionFile>
       <EnableUAC>false</EnableUAC>
     </Link>
     <Manifest />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ScreenSaver.cpp" />
+    <ClCompile Include="../source/entry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MinimalClock.rc" />
+    <ResourceCompile Include="RaylibScreensaver.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GeosansLight.ttf" />
-    <None Include="MinimalClock.def" />
+    <None Include="RaylibScreensaver.def" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="raylib.ico" />
