@@ -96,7 +96,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\source\glfwsetup.cpp" />
-    <ClCompile Include="..\source\raylib\src\raudio.c" />
     <ClCompile Include="..\source\rayproxy\proxy.raudio.c" />
     <ClCompile Include="..\source\rayproxy\proxy.rcore.c" />
     <ClCompile Include="..\source\rayproxy\proxy.rglfw.c" />
@@ -116,7 +115,6 @@
     <ResourceCompile Include="RaylibScreensaver.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GeosansLight.ttf" />
     <None Include="RaylibScreensaver.def" />
   </ItemGroup>
   <ItemGroup>
