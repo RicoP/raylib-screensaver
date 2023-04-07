@@ -21,7 +21,7 @@ extern "C" {
 #include "GLFW/glfw3.h"         // Windows/Context and inputs management
 }
 
-HWND g_hWnd;
+extern "C" HWND g_hWnd;
 
 // Creates the GLFW window
 //
@@ -249,46 +249,10 @@ GLFWbool CustomCreateWindowHook(_GLFWwindow* window,
 
 extern "C" _GLFWlibrary _glfw;
 
-#define RED        Color{ 230, 41, 55, 255 }     // Red
-#define RAYWHITE   Color{ 245, 245, 245, 255 }   // My own White (raylib logo)
-#define DARKGRAY   Color{ 80, 80, 80, 255 }      // Dark Gray
-
-//----------------------------------------------------------------------------------
-// Structures Definition
-//----------------------------------------------------------------------------------
-// Color, 4 components, R8G8B8A8 (32bit)
-typedef struct Color {
-	unsigned char r;        // Color red value
-	unsigned char g;        // Color green value
-	unsigned char b;        // Color blue value
-	unsigned char a;        // Color alpha value
-} Color;
-
-// Camera type, defines a camera position/orientation in 3d space
-typedef struct Camera {
-	Vector3 position;       // Camera position
-	Vector3 target;         // Camera target it looks-at
-	Vector3 up;             // Camera up vector (rotation over its axis)
-	float fovy;             // Camera field-of-view apperture in Y (degrees) in perspective, used as near plane width in orthographic
-	int projection;         // Camera projection: CAMERA_PERSPECTIVE or CAMERA_ORTHOGRAPHIC
-} Camera;
-
 //----------------------------------------------------------------------------------
 // Module specific Functions Declaration
 //----------------------------------------------------------------------------------
 static void ErrorCallback(int error, const char* description);
-
-// Drawing functions (uses rlgl functionality)
-static void DrawGrid(int slices, float spacing);
-static void DrawCube(Vector3 position, float width, float height, float length, Color color);
-static void DrawCubeWires(Vector3 position, float width, float height, float length, Color color);
-static void DrawRectangleV(Vector2 position, Vector2 size, Color color);
-
-// NOTE: We use raymath to get this functionality but it could be implemented in this module
-//static Matrix MatrixIdentity(void);
-//static Matrix MatrixOrtho(double left, double right, double bottom, double top, double near, double far);
-//static Matrix MatrixPerspective(double fovy, double aspect, double near, double far);
-//static Matrix MatrixLookAt(Vector3 eye, Vector3 target, Vector3 up);
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -297,13 +261,13 @@ static void DrawRectangleV(Vector2 position, Vector2 size, Color color);
 extern "C" void Init();
 extern "C" void Update();
 extern "C" void Destroy();
+extern "C" void ScreenSaveInitWindow();
 
 extern "C" SIZE g_screenSize;
+extern "C" GLFWwindow* g_window;
 
 #define screenWidth  ((int)g_screenSize.cx)
 #define screenHeight ((int)g_screenSize.cy)
-
-GLFWwindow* window;
 
 void RayInit()
 {
@@ -328,15 +292,17 @@ void RayInit()
 
 	_glfw.platform.createWindow = CustomCreateWindowHook;
 
-	window = glfwCreateWindow(screenWidth, screenHeight, "rlgl standalone", NULL, NULL);
+	g_window = glfwCreateWindow(screenWidth, screenHeight, "rlgl standalone", NULL, NULL);
 
-	if (!window)
+	if (!g_window)
 	{
 		glfwTerminate();
 		return;
 	}
 
-	glfwMakeContextCurrent(window);
+	//glfwSetWindowPos(g_window, 2000, 200);
+
+	glfwMakeContextCurrent(g_window);
 	glfwSwapInterval(0);
 
 	// Load OpenGL 3.3 supported extensions
@@ -359,11 +325,13 @@ void RayInit()
 
 	//--------------------------------------------------------------------------------------
 
+	ScreenSaveInitWindow();
 	Init();
 }
 
 void RayDraw()
 {
+#if 0
 	// Update
 		//----------------------------------------------------------------------------------
 		//camera.position.x += 0.01f;
@@ -389,9 +357,12 @@ void RayDraw()
 	rlDrawRenderBatchActive();
 	//-----------------------------------------------
 
-	glfwSwapBuffers(window);
+	glfwSwapBuffers(g_window);
 	glfwPollEvents();
 	//----------------------------------------------------------------------------------
+#else
+	Update();
+#endif
 }
 
 void RayDestroy()
@@ -402,7 +373,7 @@ void RayDestroy()
 	//--------------------------------------------------------------------------------------
 	rlglClose();                    // Unload rlgl internal buffers and default shader/texture
 
-	glfwDestroyWindow(window);      // Close window
+	glfwDestroyWindow(g_window);      // Close window
 	glfwTerminate();                // Free GLFW3 resources
 	//--------------------------------------------------------------------------------------
 }
@@ -416,20 +387,4 @@ static void ErrorCallback(int error, const char* description)
 {
 	//fprintf(stderr, "%s", description);
 	exit(1);
-}
-
-// Draw rectangle using rlgl OpenGL 1.1 style coding (translated to OpenGL 3.3 internally)
-static void DrawRectangleV(Vector2 position, Vector2 size, Color color)
-{
-	rlBegin(RL_TRIANGLES);
-	rlColor4ub(color.r, color.g, color.b, color.a);
-
-	rlVertex2f(position.x, position.y);
-	rlVertex2f(position.x, position.y + size.y);
-	rlVertex2f(position.x + size.x, position.y + size.y);
-
-	rlVertex2f(position.x, position.y);
-	rlVertex2f(position.x + size.x, position.y + size.y);
-	rlVertex2f(position.x + size.x, position.y);
-	rlEnd();
 }

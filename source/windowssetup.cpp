@@ -29,7 +29,7 @@ TCHAR szIniFile[MAXFILELEN];
 #define DRAW_TIMER 0x1
 
 // Globals
-extern HWND g_hWnd;
+extern "C" HWND g_hWnd;
 extern "C" SIZE g_screenSize;
 
 void WinInit(HWND hWnd);
@@ -59,6 +59,9 @@ LRESULT WINAPI ScreenSaverProcW(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 				first_time = false;
 				RayDestroy();
 				WinDestroy(hWnd);
+
+				//Why do I need this?
+				exit(0);
 			}
 			break;
 		}
@@ -109,7 +112,7 @@ void WinInit(HWND hWnd)
 	SetTextColor(g_hDC, RGB(255, 255, 255));
 	SetBkColor(g_hDC, RGB(255, 255, 255));
 
-	SetTimer(hWnd, DRAW_TIMER, 1000, NULL);
+	SetTimer(hWnd, DRAW_TIMER, 1, NULL);
 }
 
 void WinDestroy(HWND hWnd)

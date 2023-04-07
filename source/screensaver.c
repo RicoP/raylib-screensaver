@@ -3,6 +3,7 @@
 #define RL_MATRIX_TYPE
 #include "rlgl.h"
 
+Color cubeColor;
 Vector3 cubePosition = {0,0,0};
 Camera3D camera;
 
@@ -186,25 +187,40 @@ static void DrawCubeWires(Vector3 position, float width, float height, float len
 
 void Init()
 {
-	camera.position = (Vector3){ 5.0f, 5.0f, 5.0f };    // Camera position
+	camera.position = (Vector3){ 10.0f, 10.0f, 10.0f }; // Camera position
 	camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
 	camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
 	camera.fovy = 45.0f;                                // Camera field-of-view Y
+	camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
+	cubeColor = RED;
 }
 
 void Update()
 {
-	int screenWidth = GetScreenWidth();
-	int screenHeight = GetScreenHeight();
-	Matrix matProj = MatrixPerspective((double)(camera.fovy * DEG2RAD), (double)screenWidth / (double)screenHeight, 0.01, 1000.0);
-	Matrix matView = MatrixLookAt(camera.position, camera.target, camera.up);
+	cubeColor.r = rand();
+	cubeColor.g = rand();
+	cubeColor.b = rand();
 
-	rlSetMatrixModelview(matView);    // Set internal modelview matrix (default shader)
-	rlSetMatrixProjection(matProj);   // Set internal projection matrix (default shader)
+	UpdateCamera(&camera, CAMERA_ORBITAL);
 
-	DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
-	DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, RAYWHITE);
+	//----------------------------------------------------------------------------------
+
+	// Draw
+	//----------------------------------------------------------------------------------
+	BeginDrawing();
+
+	ClearBackground(RAYWHITE);
+
+	BeginMode3D(camera);
+
+	DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, cubeColor);
+	DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, MAROON);
+
 	DrawGrid(10, 1.0f);
+
+	EndMode3D();
+	EndDrawing();
+	//-----------
 }
 
 void Destroy()
