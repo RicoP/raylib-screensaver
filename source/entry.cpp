@@ -38,9 +38,9 @@ const TCHAR szClockHandOptionName[] = TEXT("AnimatedClockHands");
 
 #define DRAW_TIMER 0x1
 
-void Init(HWND hWnd);
-void UpdateFrame(HWND hWnd);
-void Destroy(HWND hWnd);
+void WinInit(HWND hWnd);
+void WinUpdateFrame(HWND hWnd);
+void WinDestroy(HWND hWnd);
 
 // Globals
 extern HWND g_hWnd;
@@ -57,15 +57,20 @@ LRESULT WINAPI ScreenSaverProcW(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	case WM_CREATE:
 		{
 			g_hWnd = hWnd;
-			Init(hWnd);
+			WinInit(hWnd);
 			RayInit();
 			RayDraw();
 			break;
 		}
 	case WM_DESTROY:
 		{
-			RayDestroy();
-			Destroy(hWnd);
+			static bool first_time = true;
+			if(first_time)
+			{
+				first_time = false;
+				RayDestroy();
+				WinDestroy(hWnd);
+			}
 			break;
 		}
 	case WM_PAINT:
@@ -81,7 +86,7 @@ LRESULT WINAPI ScreenSaverProcW(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 		{
 			if (wParam == DRAW_TIMER)
 			{
-				UpdateFrame(hWnd);
+				WinUpdateFrame(hWnd);
 				RayDraw();
 			}
 			break;
@@ -99,7 +104,7 @@ void LoadConfiguration()
 	g_AnimatedClockHands = GetPrivateProfileInt(szAppName, szClockHandOptionName, FALSE, szIniFile);
 }
 
-void Init(HWND hWnd)
+void WinInit(HWND hWnd)
 {
 	LoadConfiguration();
 
@@ -118,7 +123,7 @@ void Init(HWND hWnd)
 	SelectObject(g_hDC, g_hBmp);
 
 	SetTextColor(g_hDC, RGB(255, 255, 255));
-	SetBkColor(g_hDC, RGB(0, 0, 0));
+	SetBkColor(g_hDC, RGB(255, 255, 255));
 
 	{	// Load Geo-sans Light font from application resources.
 		HMODULE hResInstance = NULL;
@@ -157,11 +162,12 @@ void Init(HWND hWnd)
 	}
 
 	SetTimer(hWnd, DRAW_TIMER, 1000, NULL);
-	UpdateFrame(hWnd);
+	WinUpdateFrame(hWnd);
 }
 
-void UpdateFrame(HWND hWnd)
+void WinUpdateFrame(HWND hWnd)
 {
+	return;
 	tm timeinfo;
 	time_t rawtime;
 	time(&rawtime);
@@ -244,7 +250,7 @@ void UpdateFrame(HWND hWnd)
 	InvalidateRect(hWnd, &r, false);
 }
 
-void Destroy(HWND hWnd)
+void WinDestroy(HWND hWnd)
 {
 	KillTimer(hWnd, DRAW_TIMER);
 	ReleaseDC(hWnd, g_hDC);

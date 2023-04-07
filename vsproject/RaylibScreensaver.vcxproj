@@ -66,7 +66,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>gdiplus.lib;scrnsavw.lib;ComCtl32.lib;raylib.proxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;gdiplus.lib;scrnsavw.lib;ComCtl32.lib;raylib.proxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>RaylibScreensaver.def</ModuleDefinitionFile>
       <EnableUAC>false</EnableUAC>
     </Link>
@@ -88,7 +88,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>gdiplus.lib;scrnsavw.lib;ComCtl32.lib;raylib.proxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;gdiplus.lib;scrnsavw.lib;ComCtl32.lib;raylib.proxy.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>RaylibScreensaver.def</ModuleDefinitionFile>
       <EnableUAC>false</EnableUAC>
     </Link>
@@ -96,19 +96,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="../source/entry.cpp" />
-    <ClCompile Include="..\source\createWindowHook.cpp" />
     <ClCompile Include="..\source\impl.cpp" />
-    <ClCompile Include="..\source\rayproxy\proxy.raudio.c" />
-    <ClCompile Include="..\source\rayproxy\proxy.rcore.c" />
-    <ClCompile Include="..\source\rayproxy\proxy.rglfw.c" />
-    <ClCompile Include="..\source\rayproxy\proxy.rmodels.c" />
-    <ClCompile Include="..\source\rayproxy\proxy.rshapes.c" />
-    <ClCompile Include="..\source\rayproxy\proxy.rtext.c" />
-    <ClCompile Include="..\source\rayproxy\proxy.rtextures.c" />
-    <ClCompile Include="..\source\rayproxy\proxy.utils.c" />
+    <ClCompile Include="..\source\raylib\src\raudio.c" />
+    <ClCompile Include="..\source\raylib\src\rcore.c" />
+    <ClCompile Include="..\source\raylib\src\rglfw.c" />
+    <ClCompile Include="..\source\raylib\src\rmodels.c" />
+    <ClCompile Include="..\source\raylib\src\rshapes.c" />
+    <ClCompile Include="..\source\raylib\src\rtext.c" />
+    <ClCompile Include="..\source\raylib\src\rtextures.c" />
+    <ClCompile Include="..\source\raylib\src\utils.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\rayproxy\proxy.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
