@@ -8,7 +8,6 @@
 #include <time.h>
 #include <math.h>
 #include <string>
-
 #include "resource.h"
 
 #pragma comment(lib, "scrnsavw.lib")
@@ -41,6 +40,11 @@ const TCHAR szClockHandOptionName[] = TEXT("AnimatedClockHands");
 
 void Init(HWND hWnd);
 void UpdateFrame(HWND hWnd);
+void Destroy(HWND hWnd);
+
+void RayInit();
+void RayDraw();
+void RayDestroy();
 
 LRESULT WINAPI ScreenSaverProcW(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -49,18 +53,13 @@ LRESULT WINAPI ScreenSaverProcW(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	case WM_CREATE:
 		{
 			Init(hWnd);
+			RayInit();
 			break;
 		}
 	case WM_DESTROY:
 		{
-			KillTimer(hWnd, DRAW_TIMER);
-			ReleaseDC(hWnd, g_hDC);
-			DeleteObject(g_hDC);
-			DeleteObject(g_hBmp);
-			DeleteObject(g_hLargeFont);
-			DeleteObject(g_hSmallFont);
-			RemoveFontMemResourceEx(g_hFontResource);
-			GdiplusShutdown(g_gdiplusToken);
+			RayDestroy();
+			Destroy(hWnd);
 			break;
 		}
 	case WM_PAINT:
@@ -75,7 +74,10 @@ LRESULT WINAPI ScreenSaverProcW(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	case WM_TIMER:
 		{
 			if (wParam == DRAW_TIMER)
+			{
 				UpdateFrame(hWnd);
+				RayDraw();
+			}
 			break;
 		}
 	}
@@ -162,7 +164,8 @@ void UpdateFrame(HWND hWnd)
 	REAL clock_diameter = g_screenSize.cy / 25.0f;
 	REAL clock_left = g_screenSize.cx - g_largeTextSize.cx - g_largeTextSize.cx / 9.0f;
 	
-	{ 	// Draw analog clock
+	{
+		// Draw analog clock
 		REAL clock_radius = clock_diameter / 2.0f;
 		REAL clock_top = (g_screenSize.cy + g_largeTextSize.cy) / 2.0f - clock_diameter * 2.0f;
 
@@ -235,6 +238,17 @@ void UpdateFrame(HWND hWnd)
 	InvalidateRect(hWnd, &r, false);
 }
 
+void Destroy(HWND hWnd)
+{
+	KillTimer(hWnd, DRAW_TIMER);
+	ReleaseDC(hWnd, g_hDC);
+	DeleteObject(g_hDC);
+	DeleteObject(g_hBmp);
+	DeleteObject(g_hLargeFont);
+	DeleteObject(g_hSmallFont);
+	RemoveFontMemResourceEx(g_hFontResource);
+	GdiplusShutdown(g_gdiplusToken);
+}
 
 BOOL WINAPI ScreenSaverConfigureDialog(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
