@@ -101,8 +101,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="GeosansLight.ttf" />
-    <None Include="icon.ico" />
     <None Include="MinimalClock.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="raylib.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

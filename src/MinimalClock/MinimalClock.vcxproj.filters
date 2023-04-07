@@ -30,14 +30,16 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="icon.ico">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="GeosansLight.ttf">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="MinimalClock.def">
       <Filter>Source Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="raylib.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
