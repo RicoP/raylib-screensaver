@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.33423.256
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RaylibScreensaver", "RaylibScreensaver.vcxproj", "{C481EE9C-7811-4FB3-B3A4-59FF9BC93D5B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "raylib.proxy", "raylib.proxy.vcxproj", "{9F9A78E3-C1DA-422E-B084-22D9CB0E8923}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,14 +19,6 @@ Global
 		{C481EE9C-7811-4FB3-B3A4-59FF9BC93D5B}.Release|Win32.ActiveCfg = Release|Win32
 		{C481EE9C-7811-4FB3-B3A4-59FF9BC93D5B}.Release|Win32.Build.0 = Release|Win32
 		{C481EE9C-7811-4FB3-B3A4-59FF9BC93D5B}.Release|x64.ActiveCfg = Release|Win32
-		{9F9A78E3-C1DA-422E-B084-22D9CB0E8923}.Debug|Win32.ActiveCfg = Debug|Win32
-		{9F9A78E3-C1DA-422E-B084-22D9CB0E8923}.Debug|Win32.Build.0 = Debug|Win32
-		{9F9A78E3-C1DA-422E-B084-22D9CB0E8923}.Debug|x64.ActiveCfg = Debug|x64
-		{9F9A78E3-C1DA-422E-B084-22D9CB0E8923}.Debug|x64.Build.0 = Debug|x64
-		{9F9A78E3-C1DA-422E-B084-22D9CB0E8923}.Release|Win32.ActiveCfg = Release|Win32
-		{9F9A78E3-C1DA-422E-B084-22D9CB0E8923}.Release|Win32.Build.0 = Release|Win32
-		{9F9A78E3-C1DA-422E-B084-22D9CB0E8923}.Release|x64.ActiveCfg = Release|x64
-		{9F9A78E3-C1DA-422E-B084-22D9CB0E8923}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -44,7 +44,7 @@
     <LinkIncremental>true</LinkIncremental>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <TargetExt>.scr</TargetExt>
-    <IncludePath>../source/raylib/src;.;$(IncludePath)</IncludePath>
+    <IncludePath>..\source\raylib\src;..\source\raylib\src\external;..\source\raylib\src\external\glfw\deps;..\source\raylib\src\external\glfw\include;../source/raylib/src\external\glfw\src;.;$(IncludePath)</IncludePath>
     <LibraryPath>A:\repo\raylib-screensaver2\vsproject\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -52,7 +52,7 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <TargetExt>.scr</TargetExt>
-    <IncludePath>../source/raylib/src;.;$(IncludePath)</IncludePath>
+    <IncludePath>..\source\raylib\src;..\source\raylib\src\external;..\source\raylib\src\external\glfw\deps;..\source\raylib\src\external\glfw\include;../source/raylib/src\external\glfw\src;.;$(IncludePath)</IncludePath>
     <LibraryPath>A:\repo\raylib-screensaver2\vsproject\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -96,9 +96,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="../source/entry.cpp" />
+    <ClCompile Include="..\source\createWindowHook.cpp" />
     <ClCompile Include="..\source\impl.cpp" />
+    <ClCompile Include="..\source\rayproxy\proxy.raudio.c" />
+    <ClCompile Include="..\source\rayproxy\proxy.rcore.c" />
+    <ClCompile Include="..\source\rayproxy\proxy.rglfw.c" />
+    <ClCompile Include="..\source\rayproxy\proxy.rmodels.c" />
+    <ClCompile Include="..\source\rayproxy\proxy.rshapes.c" />
+    <ClCompile Include="..\source\rayproxy\proxy.rtext.c" />
+    <ClCompile Include="..\source\rayproxy\proxy.rtextures.c" />
+    <ClCompile Include="..\source\rayproxy\proxy.utils.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\rayproxy\proxy.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

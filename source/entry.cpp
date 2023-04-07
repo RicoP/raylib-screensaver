@@ -21,7 +21,6 @@ static HBITMAP g_hBmp = NULL;
 static HFONT g_hFontResource = NULL;
 static HFONT g_hLargeFont = NULL;
 static HFONT g_hSmallFont = NULL;
-static SIZE g_screenSize;
 static SIZE g_largeTextSize;
 static BOOL g_is24Hour;
 static BOOL g_AnimatedClockHands;
@@ -30,6 +29,7 @@ static GdiplusStartupInput g_gdiplusStartupInput;
 static ULONG_PTR g_gdiplusToken;
 
 extern HINSTANCE hMainInstance;
+
 
 TCHAR szAppName[APPNAMEBUFFERLEN];
 TCHAR szIniFile[MAXFILELEN];
@@ -42,6 +42,10 @@ void Init(HWND hWnd);
 void UpdateFrame(HWND hWnd);
 void Destroy(HWND hWnd);
 
+// Globals
+extern HWND g_hWnd;
+extern SIZE g_screenSize;
+
 void RayInit();
 void RayDraw();
 void RayDestroy();
@@ -52,8 +56,10 @@ LRESULT WINAPI ScreenSaverProcW(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
 	{
 	case WM_CREATE:
 		{
+			g_hWnd = hWnd;
 			Init(hWnd);
 			RayInit();
+			RayDraw();
 			break;
 		}
 	case WM_DESTROY:
