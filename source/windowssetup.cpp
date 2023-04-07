@@ -38,13 +38,13 @@ const TCHAR szClockHandOptionName[] = TEXT("AnimatedClockHands");
 
 #define DRAW_TIMER 0x1
 
+// Globals
+extern HWND g_hWnd;
+extern "C" SIZE g_screenSize;
+
 void WinInit(HWND hWnd);
 void WinUpdateFrame(HWND hWnd);
 void WinDestroy(HWND hWnd);
-
-// Globals
-extern HWND g_hWnd;
-extern SIZE g_screenSize;
 
 void RayInit();
 void RayDraw();

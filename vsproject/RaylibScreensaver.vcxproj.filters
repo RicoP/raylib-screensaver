@@ -13,42 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\raylib.proxy">
+      <UniqueIdentifier>{5c110c7d-3907-400d-a963-6341e43bbb46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="../source/entry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\impl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\raylib\src\raudio.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\raylib\src\rcore.c">
+    <ClCompile Include="..\source\glfwsetup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\raylib\src\rglfw.c">
+    <ClCompile Include="..\source\windowssetup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\raylib\src\rmodels.c">
+    <ClCompile Include="..\source\screensaver.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\raylib\src\rshapes.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\source\rayproxy\proxy.raudio.c">
+      <Filter>Source Files\raylib.proxy</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\raylib\src\rtext.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\source\rayproxy\proxy.rcore.c">
+      <Filter>Source Files\raylib.proxy</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\raylib\src\rtextures.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\source\rayproxy\proxy.rglfw.c">
+      <Filter>Source Files\raylib.proxy</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\raylib\src\utils.c">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\source\rayproxy\proxy.rmodels.c">
+      <Filter>Source Files\raylib.proxy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\rayproxy\proxy.rshapes.c">
+      <Filter>Source Files\raylib.proxy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\rayproxy\proxy.rtext.c">
+      <Filter>Source Files\raylib.proxy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\rayproxy\proxy.rtextures.c">
+      <Filter>Source Files\raylib.proxy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\rayproxy\proxy.utils.c">
+      <Filter>Source Files\raylib.proxy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\rayproxy\proxy.h">
+      <Filter>Source Files\raylib.proxy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
