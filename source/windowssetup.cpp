@@ -31,6 +31,9 @@ TCHAR szIniFile[MAXFILELEN];
 // Globals
 extern "C" HWND g_hWnd;
 extern "C" SIZE g_screenSize;
+extern "C" RECT g_screenScissor;
+
+RECT g_screenScissor;
 
 void WinInit(HWND hWnd);
 void WinDestroy(HWND hWnd);
@@ -38,6 +41,32 @@ void WinDestroy(HWND hWnd);
 void RayInit();
 void RayDraw();
 void RayDestroy();
+
+
+BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
+{
+	MONITORINFOEX monitorInfo;
+	monitorInfo.cbSize = sizeof(MONITORINFOEX);
+
+	if (GetMonitorInfo(hMonitor, &monitorInfo))
+	{
+		if (monitorInfo.dwFlags == MONITORINFOF_PRIMARY)
+		{
+			g_screenScissor = monitorInfo.rcMonitor;
+
+			/*
+			std::cout << "Primary monitor found!" << std::endl;
+			std::cout << "Monitor rectangle: left=" 
+				<< monitorInfo.rcMonitor.left
+				<< ", top=" << monitorInfo.rcMonitor.top
+				<< ", right=" << monitorInfo.rcMonitor.right
+				<< ", bottom=" << monitorInfo.rcMonitor.bottom << std::endl;
+			*/
+		}
+	}
+	return TRUE;
+}
+
 
 LRESULT WINAPI ScreenSaverProcW(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -99,11 +128,9 @@ void WinInit(HWND hWnd)
 
 	GdiplusStartup(&g_gdiplusToken, &g_gdiplusStartupInput, NULL);
 
-	RECT r;
-	GetClientRect(hWnd, &r);
-
-	g_screenSize.cy = r.bottom - r.top;
-	g_screenSize.cx = r.right - r.left;
+	GetClientRect(hWnd, &g_screenScissor);
+	g_screenSize.cy = g_screenScissor.bottom - g_screenScissor.top;
+	g_screenSize.cx = g_screenScissor.right - g_screenScissor.left;
 
 	HDC hDc = GetDC(hWnd);
 	g_hDC = CreateCompatibleDC(hDc);
@@ -113,6 +140,8 @@ void WinInit(HWND hWnd)
 	SetBkColor(g_hDC, RGB(255, 255, 255));
 
 	SetTimer(hWnd, DRAW_TIMER, 1, NULL);
+
+	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
 }
 
 void WinDestroy(HWND hWnd)
