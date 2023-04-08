@@ -1,13 +1,25 @@
-# Minimal Clock Screensaver
+# Raylib Screensaver
 
-As the name suggests, it shows the time…minimally.
+This is a solution on how to make native windows screensavers using raylib.
+You can make your own screensavers with 3D using Raylib!
 
-![screenshot](https://yetilabs.org/minimalclock/img/preview_white.jpg)
+![screenshot](doc/example.png)
 
-__[Download the screensaver](https://yetilabs.org/minimalclock)__
+## How to use
 
-Works with Windows XP and above.
+- Simply open the solution with either Visual Studio 2019 or 2022 Community Edition. 
+- Compile a release version and check in the folder "vsproject/Release". There should be a file raylibscreensaver.scr.
+- Right click the file and click install
+
+If you get the error "fatal error RC1015: cannot open include file 'afxres.h'" then you have to install Microsoft Foundation Classes (MFC)
+- Open the Control Panel
+- Search for Programs and Features
+- Search for Microsoft Visual Studio 
+- Click Change/Modify
+- Under featues search for  Microsoft Foundation Classes v141.
 
 ## Credits
 
-Original Mac version by [ilovecolorz](http://ilovecolorz.net/minimalclock).
+By Rico Possienka
+
+Using some code from https://github.com/ejensen/minimalclock-screensaver
