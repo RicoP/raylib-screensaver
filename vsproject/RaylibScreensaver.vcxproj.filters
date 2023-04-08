@@ -59,6 +59,9 @@
     <ClInclude Include="..\source\rayproxy\proxy.h">
       <Filter>Source Files\raylib.proxy</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\raylibscreensaver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RaylibScreensaver.rc">

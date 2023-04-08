@@ -108,6 +108,7 @@
     <ClCompile Include="..\source\windowssetup.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\raylibscreensaver.h" />
     <ClInclude Include="..\source\rayproxy\proxy.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
