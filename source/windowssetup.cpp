@@ -139,7 +139,7 @@ void WinInit(HWND hWnd)
 	SetTextColor(g_hDC, RGB(255, 255, 255));
 	SetBkColor(g_hDC, RGB(255, 255, 255));
 
-	SetTimer(hWnd, DRAW_TIMER, 1, NULL);
+	SetTimer(hWnd, DRAW_TIMER, 16, NULL);
 
 	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
 }
