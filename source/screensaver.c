@@ -1,229 +1,125 @@
 #include "raylib.h"
-#include "raymath.h"
-#define RL_MATRIX_TYPE
-#include "rlgl.h"
+#include <stdlib.h>
 
-Color cubeColor;
-Vector3 cubePosition = {0,0,0};
-Camera3D camera;
 
-// Draw a grid centered at (0, 0, 0)
-static void DrawGrid(int slices, float spacing)
+#define MAX_PARTICLES 200
+
+// Particle structure with basic data
+typedef struct {
+	Vector2 position;
+	Color color;
+	float alpha;
+	float size;
+	float rotation;
+	bool active;        // NOTE: Use it to activate/deactive particle
+} Particle;
+
+Particle mouseTail[MAX_PARTICLES] = { 0 };
+int blending = BLEND_ALPHA;
+float gravity = 3.0f;
+Texture2D smoke;
+
+Vector2 GetTailPosition() 
 {
-	int halfSlices = slices / 2;
+	Vector2 v;
 
-	rlBegin(RL_LINES);
-	for (int i = -halfSlices; i <= halfSlices; i++)
-	{
-		if (i == 0)
-		{
-			rlColor3f(0.5f, 0.5f, 0.5f);
-			rlColor3f(0.5f, 0.5f, 0.5f);
-			rlColor3f(0.5f, 0.5f, 0.5f);
-			rlColor3f(0.5f, 0.5f, 0.5f);
-		}
-		else
-		{
-			rlColor3f(0.75f, 0.75f, 0.75f);
-			rlColor3f(0.75f, 0.75f, 0.75f);
-			rlColor3f(0.75f, 0.75f, 0.75f);
-			rlColor3f(0.75f, 0.75f, 0.75f);
-		}
+	int x = rand() % GetScreenWidth();
+	int y = rand() % GetScreenWidth();
 
-		rlVertex3f((float)i * spacing, 0.0f, (float)-halfSlices * spacing);
-		rlVertex3f((float)i * spacing, 0.0f, (float)halfSlices * spacing);
-
-		rlVertex3f((float)-halfSlices * spacing, 0.0f, (float)i * spacing);
-		rlVertex3f((float)halfSlices * spacing, 0.0f, (float)i * spacing);
-	}
-	rlEnd();
+	v.x = (float)x;
+	v.y = (float)y;
+	return v;
 }
-
-// Draw cube
-// NOTE: Cube position is the center position
-static void DrawCube(Vector3 position, float width, float height, float length, Color color)
-{
-	float x = 0.0f;
-	float y = 0.0f;
-	float z = 0.0f;
-
-	rlPushMatrix();
-
-	// NOTE: Be careful! Function order matters (rotate -> scale -> translate)
-	rlTranslatef(position.x, position.y, position.z);
-	//rlScalef(2.0f, 2.0f, 2.0f);
-	//rlRotatef(45, 0, 1, 0);
-
-	rlBegin(RL_TRIANGLES);
-	rlColor4ub(color.r, color.g, color.b, color.a);
-
-	// Front Face -----------------------------------------------------
-	rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
-	rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
-	rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
-
-	rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Right
-	rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
-	rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
-
-	// Back Face ------------------------------------------------------
-	rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Left
-	rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
-	rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
-
-	rlVertex3f(x + width / 2, y + height / 2, z - length / 2);  // Top Right
-	rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
-	rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
-
-	// Top Face -------------------------------------------------------
-	rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
-	rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Bottom Left
-	rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Bottom Right
-
-	rlVertex3f(x + width / 2, y + height / 2, z - length / 2);  // Top Right
-	rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
-	rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Bottom Right
-
-	// Bottom Face ----------------------------------------------------
-	rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Top Left
-	rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
-	rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
-
-	rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Top Right
-	rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
-	rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Top Left
-
-	// Right face -----------------------------------------------------
-	rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
-	rlVertex3f(x + width / 2, y + height / 2, z - length / 2);  // Top Right
-	rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Left
-
-	rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Left
-	rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
-	rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Left
-
-	// Left Face ------------------------------------------------------
-	rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Right
-	rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
-	rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Right
-
-	rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
-	rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
-	rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Right
-	rlEnd();
-	rlPopMatrix();
-}
-
-// Draw cube wires
-static void DrawCubeWires(Vector3 position, float width, float height, float length, Color color)
-{
-	float x = 0.0f;
-	float y = 0.0f;
-	float z = 0.0f;
-
-	rlPushMatrix();
-
-	rlTranslatef(position.x, position.y, position.z);
-	//rlRotatef(45, 0, 1, 0);
-
-	rlBegin(RL_LINES);
-	rlColor4ub(color.r, color.g, color.b, color.a);
-
-	// Front Face -----------------------------------------------------
-	// Bottom Line
-	rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
-	rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
-
-	// Left Line
-	rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Bottom Right
-	rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Right
-
-	// Top Line
-	rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Right
-	rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
-
-	// Right Line
-	rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left
-	rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Bottom Left
-
-	// Back Face ------------------------------------------------------
-	// Bottom Line
-	rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Left
-	rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
-
-	// Left Line
-	rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Bottom Right
-	rlVertex3f(x + width / 2, y + height / 2, z - length / 2);  // Top Right
-
-	// Top Line
-	rlVertex3f(x + width / 2, y + height / 2, z - length / 2);  // Top Right
-	rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
-
-	// Right Line
-	rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left
-	rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Bottom Left
-
-	// Top Face -------------------------------------------------------
-	// Left Line
-	rlVertex3f(x - width / 2, y + height / 2, z + length / 2);  // Top Left Front
-	rlVertex3f(x - width / 2, y + height / 2, z - length / 2);  // Top Left Back
-
-	// Right Line
-	rlVertex3f(x + width / 2, y + height / 2, z + length / 2);  // Top Right Front
-	rlVertex3f(x + width / 2, y + height / 2, z - length / 2);  // Top Right Back
-
-	// Bottom Face  ---------------------------------------------------
-	// Left Line
-	rlVertex3f(x - width / 2, y - height / 2, z + length / 2);  // Top Left Front
-	rlVertex3f(x - width / 2, y - height / 2, z - length / 2);  // Top Left Back
-
-	// Right Line
-	rlVertex3f(x + width / 2, y - height / 2, z + length / 2);  // Top Right Front
-	rlVertex3f(x + width / 2, y - height / 2, z - length / 2);  // Top Right Back
-	rlEnd();
-	rlPopMatrix();
-}
-
 
 void Init()
 {
-	camera.position = (Vector3){ 10.0f, 10.0f, 10.0f }; // Camera position
-	camera.target = (Vector3){ 0.0f, 0.0f, 0.0f };      // Camera looking at point
-	camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
-	camera.fovy = 45.0f;                                // Camera field-of-view Y
-	camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
-	cubeColor = RED;
+	// Initialize particles
+	for (int i = 0; i < MAX_PARTICLES; i++)
+	{
+		mouseTail[i].position = (Vector2){ 0, 0 };
+		mouseTail[i].color = (Color){ GetRandomValue(0, 255), GetRandomValue(0, 255), GetRandomValue(0, 255), 255 };
+		mouseTail[i].alpha = 1.0f;
+		mouseTail[i].size = (float)GetRandomValue(1, 30) / 20.0f;
+		mouseTail[i].rotation = (float)GetRandomValue(0, 360);
+		mouseTail[i].active = false;
+	}
+
+	Color from = WHITE;
+	Color to = WHITE;
+	to.a = 0;
+	Image radial = GenImageGradientRadial(128, 128, 0.0f, from, to);
+	smoke = LoadTextureFromImage(radial);
+	UnloadImage(radial);
 }
 
 void Update()
 {
-	cubeColor.r = rand();
-	cubeColor.g = rand();
-	cubeColor.b = rand();
+	// Update
+	   //----------------------------------------------------------------------------------
 
-	UpdateCamera(&camera, CAMERA_ORBITAL);
+	   // Activate one particle every frame and Update active particles
+	   // NOTE: Particles initial position should be mouse position when activated
+	   // NOTE: Particles fall down with gravity and rotation... and disappear after 2 seconds (alpha = 0)
+	   // NOTE: When a particle disappears, active = false and it can be reused.
+	for (int i = 0; i < MAX_PARTICLES; i++)
+	{
+		if (!mouseTail[i].active)
+		{
+			mouseTail[i].active = true;
+			mouseTail[i].alpha = 1.0f;
+			mouseTail[i].position = GetTailPosition();
+			i = MAX_PARTICLES;
+		}
+	}
 
+	for (int i = 0; i < MAX_PARTICLES; i++)
+	{
+		if (mouseTail[i].active)
+		{
+			mouseTail[i].position.y += gravity / 2;
+			mouseTail[i].alpha -= 0.005f;
+
+			if (mouseTail[i].alpha <= 0.0f) mouseTail[i].active = false;
+
+			mouseTail[i].rotation += 2.0f;
+		}
+	}
+
+	if (IsKeyPressed(KEY_SPACE))
+	{
+		if (blending == BLEND_ALPHA) blending = BLEND_ADDITIVE;
+		else blending = BLEND_ALPHA;
+	}
 	//----------------------------------------------------------------------------------
 
 	// Draw
 	//----------------------------------------------------------------------------------
 	BeginDrawing();
 
-	ClearBackground(RAYWHITE);
+	ClearBackground(DARKGRAY);
 
-	BeginMode3D(camera);
+	BeginBlendMode(blending);
 
-	DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, cubeColor);
-	DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, MAROON);
+	// Draw active particles
+	for (int i = 0; i < MAX_PARTICLES; i++)
+	{
+		if (mouseTail[i].active) DrawTexturePro(smoke, (Rectangle) { 0.0f, 0.0f, (float)smoke.width, (float)smoke.height },
+			(Rectangle) {
+			mouseTail[i].position.x, mouseTail[i].position.y, smoke.width* mouseTail[i].size, smoke.height* mouseTail[i].size
+		},
+			(Vector2) {
+			(float)(smoke.width * mouseTail[i].size / 2.0f), (float)(smoke.height * mouseTail[i].size / 2.0f)
+		}, mouseTail[i].rotation,
+				Fade(mouseTail[i].color, mouseTail[i].alpha));
+	}
 
-	DrawGrid(10, 1.0f);
+	EndBlendMode();
 
-	EndMode3D();
 	EndDrawing();
-	//-----------
 }
 
 void Destroy()
 {
+	UnloadTexture(smoke);
 }
 
