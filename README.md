@@ -7,11 +7,12 @@ You can make your own screensavers with 3D using Raylib!
 
 ## How to use
 
-- Simply open the solution with either Visual Studio 2019 or 2022 Community Edition. 
-- Compile a release version and check in the folder "vsproject/Release". There should be a file raylibscreensaver.scr.
+- Simply open the solution under vsproject/RaylibScreensaver.sln with either Visual Studio 2019 or 2022 Community Edition (https://visualstudio.microsoft.com/vs/community/).
+- You can add your own code in source/screensaver.c (Just change the Init, Update and Destroy method).
+- Compile a release version and check in the folder "vsproject/Release". There should be a file *raylibscreensaver.scr*.
 - Right click the file and click install
 
-If you get the error "fatal error RC1015: cannot open include file 'afxres.h'" then you have to install Microsoft Foundation Classes (MFC)
+### If you get the error "fatal error RC1015: cannot open include file 'afxres.h'" then you have to install Microsoft Foundation Classes (MFC)
 - Open the Control Panel
 - Search for Programs and Features
 - Search for Microsoft Visual Studio 
