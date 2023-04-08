@@ -1,10 +1,8 @@
 #include "raylib.h"
 #include <stdlib.h>
 
-
 #define MAX_PARTICLES 200
 
-// Particle structure with basic data
 typedef struct {
 	Vector2 position;
 	Color color;
@@ -12,22 +10,21 @@ typedef struct {
 	float size;
 	float rotation;
 	float gravity;
-	bool active;        // NOTE: Use it to activate/deactive particle
+	bool active;
 } Particle;
 
 int blending = BLEND_ALPHA;
-Particle mouseTail[MAX_PARTICLES] = { 0 };
+Particle particles[MAX_PARTICLES] = { 0 };
 RenderTexture2D raylibLogo;
-
 int frameCounter = 0;
 
-Vector2 GetTailPosition() 
+Vector2 GetRandomPosition() 
 {
 	Vector2 v;
 
 	int x = rand() % GetScreenWidth();
 	int y = rand() % GetScreenHeight();
-	y -= 100;
+	y -= 200;
 
 	v.x = (float)x;
 	v.y = (float)y;
@@ -36,21 +33,17 @@ Vector2 GetTailPosition()
 
 void SpawnParticle() 
 {
-	// Activate one particle every frame and Update active particles
-	// NOTE: Particles initial position should be mouse position when activated
-	// NOTE: Particles fall down with gravity and rotation... and disappear after 2 seconds (alpha = 0)
-	// NOTE: When a particle disappears, active = false and it can be reused.
 	for (int i = 0; i < MAX_PARTICLES; i++)
 	{
-		if (!mouseTail[i].active)
+		if (!particles[i].active)
 		{
-			mouseTail[i].active = true;
-			mouseTail[i].alpha = 1.0f;
-			mouseTail[i].gravity = ((float)GetRandomValue(30, 70)) / 10.0f;
-			mouseTail[i].position = GetTailPosition();
-			mouseTail[i].color = (Color){ GetRandomValue(0, 255), GetRandomValue(0, 255), GetRandomValue(0, 255), 255 };
-			mouseTail[i].size = (float)GetRandomValue(1, 30) / 20.0f;
-			mouseTail[i].rotation = (float)GetRandomValue(0, 360);
+			particles[i].active = true;
+			particles[i].alpha = 1.0f;
+			particles[i].gravity = ((float)GetRandomValue(30, 70)) / 10.0f;
+			particles[i].position = GetRandomPosition();
+			particles[i].color = (Color){ GetRandomValue(0, 255), GetRandomValue(0, 255), GetRandomValue(0, 255), 255 };
+			particles[i].size = (float)GetRandomValue(1, 30) / 20.0f;
+			particles[i].rotation = (float)GetRandomValue(180 - 45, 180 + 45);
 			break;
 		}
 	}
@@ -60,7 +53,7 @@ void Init()
 {
 	for (int i = 0; i < MAX_PARTICLES; i++)
 	{
-		memset(&mouseTail[i], 0, sizeof(Particle));
+		memset(&particles[i], 0, sizeof(Particle));
 	}
 
 	memset(&raylibLogo, 0, sizeof(raylibLogo));
@@ -86,17 +79,17 @@ void Update()
 	// Update particle
 	for (int i = 0; i < MAX_PARTICLES; i++)
 	{
-		if (mouseTail[i].active)
+		if (particles[i].active)
 		{
-			mouseTail[i].position.y += mouseTail[i].gravity / 2;
-			mouseTail[i].alpha -= 0.0025f;
-			mouseTail[i].active = (mouseTail[i].alpha > 0.0f);
+			particles[i].position.y += particles[i].gravity / 2;
+			particles[i].alpha -= 0.0025f;
+			particles[i].active = (particles[i].alpha > 0.0f);
 			//mouseTail[i].rotation += 2.0f;
 		}
 	}
 
 	// Draw
-	Texture2D smoke = raylibLogo.texture;
+	Texture2D particle = raylibLogo.texture;
 	BeginDrawing();
 
 	ClearBackground(DARKGRAY);
@@ -106,15 +99,15 @@ void Update()
 	// Draw active particles
 	for (int i = 0; i < MAX_PARTICLES; i++)
 	{
-		if (mouseTail[i].active) 
+		if (particles[i].active) 
 		{
 			DrawTexturePro(
-				smoke, 
-				(Rectangle) { 0.0f, 0.0f, (float)-smoke.width, (float)smoke.height },
-				(Rectangle) { mouseTail[i].position.x, mouseTail[i].position.y, smoke.width* mouseTail[i].size, smoke.height* mouseTail[i].size },
-				(Vector2) { (float)(smoke.width * mouseTail[i].size / 2.0f), (float)(smoke.height * mouseTail[i].size / 2.0f) }, 
-				mouseTail[i].rotation,
-				Fade(mouseTail[i].color, mouseTail[i].alpha)
+				particle, 
+				(Rectangle) { 0.0f, 0.0f, (float)-particle.width, (float)particle.height },
+				(Rectangle) { particles[i].position.x, particles[i].position.y, particle.width* particles[i].size, particle.height* particles[i].size },
+				(Vector2) { (float)(particle.width * particles[i].size / 2.0f), (float)(particle.height * particles[i].size / 2.0f) }, 
+				particles[i].rotation,
+				Fade(particles[i].color, particles[i].alpha)
 			);
 		}
 	}
@@ -126,7 +119,6 @@ void Update()
 
 void Destroy()
 {
-	//UnloadTexture(smoke);
 	UnloadRenderTexture(raylibLogo);
 }
 
