@@ -326,43 +326,20 @@ void RayInit()
 	//--------------------------------------------------------------------------------------
 
 	ScreenSaveInitWindow();
-	Init();
 }
 
 void RayDraw()
 {
-#if 0
-	// Update
-		//----------------------------------------------------------------------------------
-		//camera.position.x += 0.01f;
-		//----------------------------------------------------------------------------------
+	static int frameCounter = 0;
 
-		// Draw
-		//----------------------------------------------------------------------------------
-	rlClearScreenBuffers();             // Clear current framebuffer
-
-		// Draw '3D' elements in the scene
-		//-----------------------------------------------
-		// Calculate projection matrix (from perspective) and view matrix from camera look at
-	
+	if(frameCounter == 0) 
 	{
-		Update();
+		Init();
 	}
 
-	// Draw internal render batch buffers (3D data)
-	rlDrawRenderBatchActive();
-	//-----------------------------------------------
-
-	// Draw internal render batch buffers (2D data)
-	rlDrawRenderBatchActive();
-	//-----------------------------------------------
-
-	glfwSwapBuffers(g_window);
-	glfwPollEvents();
-	//----------------------------------------------------------------------------------
-#else
 	Update();
-#endif
+
+	frameCounter++;
 }
 
 void RayDestroy()
